@@ -3,6 +3,7 @@ htmlcov/
 .tox/
 .nox/
 .coverage
+.coveragec
 .coverage.*
 .cache
 nosetests.xml
@@ -12,6 +13,9 @@ coverage.xml
 .pytest_cache/
 pytestdebug.log
 *.pdf
+
+*.log
+
 
 __pycache__
 
