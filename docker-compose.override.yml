@@ -1,0 +1,8 @@
+services:
+  elasticsearch:
+    build:
+      dockerfile: Dockerfile_ES 
+
+  llm_be:
+    build:
+      dockerfile: Dockerfile_BE 

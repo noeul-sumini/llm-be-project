@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  chroma:
+    container_name: chromadb
+    image: chromadb/chroma
+    environment:
+      - IS_PRESISTENT=TRUE
+      - ANONYMIZED_TELEMETRY=TRUE
+    ports:
+      - 8000:8000
+      
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  elasticsearch:
+    container_name: elasticsearch
+    image: elasticsearch
+    build: .
+    environment:
+      - discovery.type=single-node
+    ports:
+      - 9200:9200
+      - 9300:9300    
+
+  llm_be:
+    image: llm_be
+    build:
+      context: .
+    env_file:
+      - ./app/.env
+    ports:
+      - 8080:8080
+    tty: true
+    depends_on:
+      - chroma
+      - elasticsearch
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/v1/common/ping"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 3
+    
